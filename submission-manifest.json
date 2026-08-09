@@ -1,0 +1,30 @@
+{
+  "project": "SocraticPath",
+  "version": "1.1.0",
+  "track": "CS6460 development project",
+  "runtime": "Node.js 20+",
+  "externalDependencies": [],
+  "commands": {
+    "start": "npm start",
+    "test": "npm test",
+    "evaluate": "npm run evaluate"
+  },
+  "verification": {
+    "automatedTests": {
+      "total": 22,
+      "passed": 22,
+      "failed": 0
+    },
+    "scriptedEvaluation": {
+      "total": 15,
+      "passed": 15,
+      "failed": 0
+    }
+  },
+  "submissionExclusions": [
+    ".env",
+    "node_modules",
+    "API keys",
+    "private learner data"
+  ]
+}
