@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="SocraticPath is a proof-of-concept adaptive tutor designed to support productive struggle."
+    />
+    <title>SocraticPath · Productive Struggle Tutor</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="SocraticPath home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" role="img">
+              <path d="M8 9.5h13.5a8.5 8.5 0 0 1 0 17H18l-6.5 5v-5H8z" />
+              <path class="brand-spark" d="M20 13.5l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6z" />
+            </svg>
+          </span>
+          <span>
+            <strong>SocraticPath</strong>
+            <small>Productive struggle tutor</small>
+          </span>
+        </a>
+
+        <div class="prototype-meta">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Interactive prototype</span>
+          <span class="version-pill">v1.1</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="lesson-panel panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Practice set</p>
+            <h1>Applied algebra</h1>
+            <p>Choose a modeling problem. Support responds to the reasoning you show.</p>
+          </div>
+
+          <div id="scenario-list" class="scenario-list" aria-label="Available problems"></div>
+
+          <div class="mode-card">
+            <div>
+              <span class="mode-label">Tutor response mode</span>
+              <span id="mode-help" class="mode-help">Rule fallback; add a key for free-form interpretation</span>
+            </div>
+            <select id="mode-select" aria-label="Tutor response mode">
+              <option value="demo">Demo</option>
+              <option value="live">Live LLM</option>
+            </select>
+          </div>
+
+          <button id="reset-button" class="secondary-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4v6h6M20 20v-6h-6M5.5 15a7 7 0 0 0 11.7 2.6L20 14M4 10l2.8-3.6A7 7 0 0 1 18.5 9" />
+            </svg>
+            Reset this problem
+          </button>
+          <button id="export-button" class="secondary-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+            </svg>
+            Export session trace
+          </button>
+        </aside>
+
+        <section class="conversation-panel panel">
+          <div class="problem-card">
+            <div class="problem-copy">
+              <div class="problem-meta">
+                <span id="difficulty-badge" class="difficulty-badge">Foundation</span>
+                <span id="problem-objective">Loading learning goal…</span>
+              </div>
+              <h2 id="problem-title">Loading problem…</h2>
+              <p id="problem-prompt" class="problem-statement">—</p>
+            </div>
+          </div>
+
+          <div id="notice" class="notice" role="status" hidden></div>
+
+          <div id="chat-log" class="chat-log" aria-live="polite" aria-label="Tutoring conversation">
+            <div class="loading-state">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+
+          <div class="composer-wrap">
+            <div class="quick-actions">
+              <button id="hint-button" class="hint-button" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 18h6M10 22h4M8.6 14.5A7 7 0 1 1 15.4 14.5c-.9.8-1.4 1.6-1.4 2.5h-4c0-.9-.5-1.7-1.4-2.5Z" />
+                </svg>
+                Ask for a hint
+              </button>
+              <span>Support increases after a genuine reasoning attempt—not repeated answers.</span>
+            </div>
+            <form id="message-form" class="composer">
+              <label class="sr-only" for="message-input">Your reasoning or next step</label>
+              <textarea
+                id="message-input"
+                rows="1"
+                maxlength="600"
+                placeholder="Explain your next step…"
+                autocomplete="off"
+              ></textarea>
+              <button id="send-button" class="send-button" type="submit" aria-label="Send response">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m5 12 14-7-4 14-3-6-7-1Z" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <aside class="trace-panel panel">
+          <div class="panel-heading trace-heading">
+            <div>
+              <p class="eyebrow">Instructor view</p>
+              <h2>Learning coach trace</h2>
+            </div>
+            <span class="trace-live"><span></span> Live</span>
+          </div>
+
+          <div class="trace-summary">
+            <div class="trace-row">
+              <span>Learning state</span>
+              <strong id="trace-status">Working</strong>
+            </div>
+            <div class="trace-row">
+              <span>Meaningful attempts</span>
+              <strong id="trace-attempts">0</strong>
+            </div>
+            <div class="trace-row">
+              <span>Repeated submissions</span>
+              <strong id="trace-duplicates">0</strong>
+            </div>
+            <div class="trace-row">
+              <span>Detected pattern</span>
+              <strong id="trace-misconception">None yet</strong>
+            </div>
+            <div class="trace-row">
+              <span>Interpretation</span>
+              <strong id="trace-analysis">Rule fallback</strong>
+            </div>
+          </div>
+
+          <div class="trace-section">
+            <div class="section-title">
+              <span>Escalation ladder</span>
+              <small id="support-count">Level 1 of 5</small>
+            </div>
+            <ol id="support-ladder" class="support-ladder">
+              <li><span>1</span><div><strong>Diagnostic question</strong><small>Elicit a model or plan</small></div></li>
+              <li><span>2</span><div><strong>Concept connection</strong><small>After first learner evidence</small></div></li>
+              <li><span>3</span><div><strong>Strategy cue</strong><small>After trying the concept</small></div></li>
+              <li><span>4</span><div><strong>Worked next step</strong><small>After trying the strategy</small></div></li>
+              <li><span>5</span><div><strong>Worked explanation</strong><small>After trying the partial step</small></div></li>
+            </ol>
+          </div>
+
+          <div class="trigger-card">
+            <span>What unlocks the next level</span>
+            <p id="next-trigger">Submit a reasoned first step, or ask once for a conceptual hint.</p>
+          </div>
+
+          <div class="decision-card">
+            <span>Latest policy decision</span>
+            <p id="policy-decision">Waiting for the first student turn.</p>
+          </div>
+
+          <div class="guardrail-card">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3 5 6v5c0 4.5 2.8 8.5 7 10 4.2-1.5 7-5.5 7-10V6l-7-3Z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+            <div>
+              <strong id="guardrail-title">Direct-answer guard active</strong>
+              <span id="guardrail-copy">Final answer remains withheld at this support level.</span>
+            </div>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
