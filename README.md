@@ -124,7 +124,3 @@ productive-struggle-tutor/
 ## Scope and limitations
 
 This is an interaction proof of concept, not a complete educational platform. It does not include accounts, persistent learner models, a teacher dashboard, or a broad curriculum. The authored misconception library is small, and automated tests establish software behavior rather than learning effectiveness. Live interpretation can still make classification mistakes; policy constraints and the rule fallback limit their impact.
-
-## AI assistance disclosure
-
-ChatGPT/Codex assisted with implementation, testing, interface refinement, and technical documentation. The project owner reviewed the artifacts and remains responsible for the submitted work. No API key or private learner data is included in the archive.
